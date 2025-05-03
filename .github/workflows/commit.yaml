@@ -2,7 +2,7 @@ name: Auto Commit Machine 🌱
 
 on:
   schedule:
-    - cron: '0 */4 * * *'  # 每4小时执行一次（UTC时间）
+    - cron: '0 */4 * * *'  # 每4小时运行
   workflow_dispatch:
 
 jobs:
@@ -12,6 +12,11 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
+
+      - name: Ensure branch is main and up to date
+        run: |
+          git fetch origin
+          git checkout -B main origin/main
 
       - name: Configure Git
         run: |
@@ -26,9 +31,6 @@ jobs:
             git commit -m "🤖 Auto commit $i on $(date)" || echo "Nothing to commit for $i"
           done
 
-      - name: Pull latest before push
-        run: git pull origin main --rebase
-
       - name: Push with token
         run: |
-          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git HEAD:main
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git main
