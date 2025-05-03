@@ -2,7 +2,7 @@ name: Auto Commit Machine 🌱
 
 on:
   schedule:
-    - cron: '0 */4 * * *'  # 每4小时一次（UTC时间）
+    - cron: '0 */4 * * *'
   workflow_dispatch:
 
 jobs:
@@ -10,22 +10,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-      - name: Configure Git
+      - name: Set Git Config
         run: |
           git config --global user.name "yupengtang"
           git config --global user.email "yupengtang@outlook.com"
 
-      - name: Make multiple dummy commits
+      - name: Make Dummy Commits
         run: |
           for i in {1..3}; do
             echo "$(date) -- auto commit $i" >> log.txt
             git add log.txt
-            git commit -m "🤖 Auto commit $i on $(date)" || echo "Nothing to commit for $i"
+            git commit -m "🤖 Auto commit $i on $(date)" || echo "No changes to commit $i"
           done
 
-      - name: Push commits with GITHUB_TOKEN
+      - name: Pull and Push with Token
         run: |
-          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/yupengtang/static.git HEAD:main
+          git pull --rebase https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git main
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git HEAD:main
