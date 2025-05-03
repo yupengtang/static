@@ -26,6 +26,9 @@ jobs:
             git commit -m "🤖 Auto commit $i on $(date)" || echo "Nothing to commit for $i"
           done
 
-      - name: Push commits with token (dynamic repo name)
+      - name: Pull latest before push
+        run: git pull origin main --rebase
+
+      - name: Push with token
         run: |
           git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git HEAD:main
