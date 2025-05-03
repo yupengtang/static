@@ -1,0 +1,18 @@
+name: Daily Issue Creator
+
+on:
+  schedule:
+    - cron: '30 3 * * *'  # 每天 UTC 时间 03:30 执行
+
+jobs:
+  open-issue:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create Issue
+        uses: peter-evans/create-issue@v5
+        with:
+          title: "Daily log - $(date +'%Y-%m-%d')"
+          body: |
+            This is an automated issue to keep activity alive 🌱.
+            Project: numerosity-dataset
+            Timestamp: $(date)

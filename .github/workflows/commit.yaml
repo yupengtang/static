@@ -1,0 +1,23 @@
+name: Auto Commit Machine
+
+on:
+  schedule:
+    - cron: '0 */4 * * *'  # 每4小时一次
+  workflow_dispatch:
+
+jobs:
+  commit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Multiple Commits
+        run: |
+          for i in {1..3}; do
+            echo "$(date) -- auto commit $i" >> log.txt
+            git config --global user.name "yupengtang"
+            git config --global user.email "yupengtang@outlook.com"
+            git add .
+            git commit -m "🤖 Auto commit $i on $(date)"
+          done
+      - name: Push
+        run: git push
